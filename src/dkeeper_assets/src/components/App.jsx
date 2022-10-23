@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -11,11 +11,18 @@ function App() {
   function addNote(newNote) {
     setNotes((prevNotes) => {
       dkeeper.createNote(newNote.title, newNote.content);
-      return [...prevNotes, newNote];
+      return [newNote, ...prevNotes];
     });
   }
 
+  useEffect(() => {
+    dkeeper.getNotes().then((notes) => {
+      setNotes(notes);
+    });
+  }, []);
+
   function deleteNote(id) {
+    dkeeper.removeNote(id);
     setNotes((prevNotes) =>
       prevNotes.filter((noteItem, index) => index !== id)
     );
